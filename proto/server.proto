@@ -1,0 +1,33 @@
+syntax = "proto3";
+package logsagg;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "logs_analyzer/protobuf/serverpb";
+
+enum Severity {
+    INFO = 0;
+    WARNING = 1;
+    ERROR = 2;
+}
+
+message LogEntry {
+    string clientID = 1;
+    Severity severity = 2;
+    google.protobuf.Timestamp timestamp = 3;
+    string msg = 4;
+}
+
+message BatchEntry {
+    repeated LogEntry logs = 1;
+}
+
+message Response {
+    bool ok = 1;
+}
+
+service LogsService {
+  rpc InjestLogEntry(LogEntry) returns (Response);
+  rpc InjestBatch(BatchEntry) returns (Response);
+}
+

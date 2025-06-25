@@ -1,0 +1,7 @@
+log_aggregation:
+  output:
+    directory: ./logs/
+    filename_pattern: "app_log_{timestamp}.log"  # Use strftime format tokens, e.g., %Y-%m-%d
+
+
+

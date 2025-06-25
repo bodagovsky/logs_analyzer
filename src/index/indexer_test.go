@@ -63,6 +63,12 @@ func TestSearch(t *testing.T) {
 			expected: []string{"😇smile", "😇happy"},
 		},
 		{
+			title:    "Japaneese",
+			words:    []string{"ありがとう", "あります", "アニメ", "アイコン", "愛情", "愛"},
+			word:     "あり",
+			expected: []string{"ありがとう", "あります"},
+		},
+		{
 			title:    "case_sensitive_check",
 			words:    []string{"Apple", "app", "application", "APPlePie"},
 			word:     "app",

@@ -3,11 +3,11 @@ package index
 /* Indexer is responsible for building full-text search index for logs */
 
 type Indexer struct {
-	head map[byte]*node
+	head map[rune]*node
 }
 
 func NewIndexer() *Indexer {
-	return &Indexer{head: make(map[byte]*node)}
+	return &Indexer{head: make(map[rune]*node)}
 }
 
 func (I *Indexer) Index(word string) {
@@ -19,44 +19,50 @@ func (I *Indexer) Search(word string) []string {
 }
 
 func (I *Indexer) Reset() {
-	I.head = make(map[byte]*node)
+	I.head = make(map[rune]*node)
 }
 
 type node struct {
-	value    byte
+	value    rune
 	entry    bool
-	children map[byte]*node
+	children map[rune]*node
 }
 
-func insert(word string, to map[byte]*node) {
-	for i := range word {
-		if _, ok := to[word[i]]; !ok {
-			to[word[i]] = &node{value: word[i]}
+func insert(word string, to map[rune]*node) {
+
+	for i, r := range word {
+		if _, ok := to[r]; !ok {
+			to[r] = &node{value: r}
 		}
 
-		to[word[i]].entry = i == len(word)-1 || to[word[i]].entry
-
-		if to[word[i]].children == nil {
-			to[word[i]].children = make(map[byte]*node)
+		if to[r].children == nil {
+			to[r].children = make(map[rune]*node)
 		}
-		to = to[word[i]].children
+		to[r].entry = to[r].entry || len(string(r))+i == len(word)
+		to = to[r].children
+
 	}
 }
 
-func query(word string, from map[byte]*node) []string {
+func query(word string, from map[rune]*node) []string {
 	if len(word) == 0 {
 		return []string{}
 	}
-	if _, ok := from[word[0]]; !ok {
-		return []string{}
+
+	for _, char := range word {
+		if _, ok := from[char]; !ok {
+			return []string{}
+		}
+		break
 	}
+
 	var entry bool
-	for i := range word {
-		if from[word[i]].children == nil {
+	for _, char := range word {
+		if from[char].children == nil {
 			break
 		}
-		entry = from[word[i]].entry
-		from = from[word[i]].children
+		entry = from[char].entry
+		from = from[char].children
 	}
 
 	var output []string
@@ -69,7 +75,7 @@ func query(word string, from map[byte]*node) []string {
 	return output
 }
 
-func gather(children map[byte]*node) []string {
+func gather(children map[rune]*node) []string {
 	var result []string
 	for k, v := range children {
 		if v.entry {

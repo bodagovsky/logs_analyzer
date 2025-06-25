@@ -1,4 +1,4 @@
-module logs_analyzer
+module github.com/bodagovsky/logs_analyzer
 
 go 1.24.2
 

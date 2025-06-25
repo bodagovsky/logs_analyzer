@@ -1,20 +1,19 @@
 syntax = "proto3";
 package logsagg;
 
-import "google/protobuf/timestamp.proto";
-
 option go_package = "logs_analyzer/protobuf/serverpb";
 
 enum Severity {
     INFO = 0;
     WARNING = 1;
     ERROR = 2;
+    CRITICAL = 3;
 }
 
 message LogEntry {
     string clientID = 1;
     Severity severity = 2;
-    google.protobuf.Timestamp timestamp = 3;
+    int64 timestamp = 3;
     string msg = 4;
 }
 

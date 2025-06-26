@@ -1,3 +1,0 @@
-[2025-06-24 12:34:56] [INFO] [client-42] - User successfully logged in
-[2025-06-24 12:35:10] [ERROR] [client-42] - Failed to connect to database: timeout after 5s
-[2025-06-24 12:35:40] [DEBUG] [client-42] - Received payload: {"id":123,"status":"ok"}

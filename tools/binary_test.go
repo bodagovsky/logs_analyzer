@@ -7,7 +7,6 @@ import (
 )
 
 func TestBinarySearch(t *testing.T) {
-
 	cases := []struct {
 		title    string
 		keys     []int64
@@ -140,7 +139,7 @@ func TestBinarySearch(t *testing.T) {
 
 	for _, test := range cases {
 		t.Run(test.title, func(t *testing.T) {
-			assert.Equal(t, test.expected, Binary(test.keys, test.target, 0, len(test.keys)))
+			assert.Equal(t, test.expected, Binary(test.keys, test.target, 0, len(test.keys), CompareInt64))
 		})
 	}
 }

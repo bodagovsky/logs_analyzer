@@ -1,4 +1,4 @@
-module github.com/bodagovsky/logs_analyzer
+module github.com/bodagovsky/logs_out
 
 go 1.24.2
 

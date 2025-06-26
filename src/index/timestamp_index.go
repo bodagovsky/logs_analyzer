@@ -1,9 +1,9 @@
 package index
 
-import "github.com/bodagovsky/logs_analyzer/tools"
+import "github.com/bodagovsky/logs_out/tools"
 
-// Timespan specifies window in which timetsamp are aggregated in index
-const TimeSpan int64 = 3600 // 1 hour
+// TIMESPAN specifies window in which timetsamps are aggregated in index
+const TIMESPAN int64 = 3600 // 1 hour
 
 type TimestampIndex struct {
 	keys     []int64
@@ -24,7 +24,7 @@ func (ti *TimestampIndex) InsertLogEntry(ts, line int64) {
 		return
 	}
 	i := len(ti.keys) - 1
-	if ts-ti.keys[i] >= TimeSpan {
+	if ts-ti.keys[i] >= TIMESPAN {
 		ti.keys = append(ti.keys, ts)
 		ti.mappings[ts] = line
 	}

@@ -31,7 +31,7 @@ func (ti *TimestampIndex) InsertLogEntry(ts, line int64) {
 }
 
 func (ti TimestampIndex) LocateLogEntry(from int64) int64 {
-	i := tools.Binary(ti.keys, from, 0, len(ti.keys))
+	i := tools.Binary(ti.keys, from, 0, len(ti.keys), tools.CompareInt64)
 	return ti.mappings[ti.keys[i]]
 }
 

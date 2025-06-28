@@ -7,20 +7,23 @@ import "github.com/bodagovsky/logs_out/tools"
 const MAXCHILDREN int = 6
 
 type GlobalIndex struct {
-	root         *globalnode
-	overallDepth int
+	root *globalnode
 }
 
 type globalnode struct {
-	value      int64
-	pointer    int
-	rebalanced bool
-	children   [MAXCHILDREN]*globalnode
+	value    int64
+	pointer  int
+	balanced bool
+	children [MAXCHILDREN]*globalnode
+	depth    int
 }
 
 func NewGlobalIndex() *GlobalIndex {
 	return &GlobalIndex{
-		root: &globalnode{},
+		root: &globalnode{
+			children: [MAXCHILDREN]*globalnode{{}},
+			depth:    1,
+		},
 	}
 }
 
@@ -32,21 +35,19 @@ func (gi *GlobalIndex) Insert(timestamp int64) {
 		return
 	}
 	newNode := &globalnode{value: timestamp}
-	if recursivelyInsert(newNode, gi.root, 1, gi.overallDepth) {
-		rebalance(gi.root)
-		gi.overallDepth++
-	}
+	recursivelyInsert(newNode, gi.root, gi.root.depth+1 /* because we need a room to grow */)
 }
 
-func recursivelyInsert(node *globalnode, root *globalnode, currDepth int, overallDepth int) bool {
-	if root.pointer == 0 || !root.children[root.pointer-1].rebalanced {
+func recursivelyInsert(node *globalnode, root *globalnode, leftDepth int) bool {
+	if root.pointer == 0 || !root.children[0].balanced {
 		if root.pointer == 0 {
 			root.value = node.value
 		}
 		root.children[root.pointer] = node
 		root.pointer++
 		if root.pointer == MAXCHILDREN {
-			if currDepth == overallDepth {
+			if root.depth+1 > leftDepth {
+				root.balanced = true
 				return true
 			}
 			// otherwise - rebalance!
@@ -55,11 +56,19 @@ func recursivelyInsert(node *globalnode, root *globalnode, currDepth int, overal
 		return false
 	}
 	if root.children[root.pointer] == nil {
-		root.children[root.pointer] = &globalnode{}
+		root.children[root.pointer] = &globalnode{
+			value: node.value,
+			depth: 1,
+		}
 	}
-	if recursivelyInsert(node, root.children[root.pointer], currDepth+1, overallDepth) {
+
+	if recursivelyInsert(node, root.children[root.pointer], root.children[root.pointer-1].depth) {
 		root.pointer++
 		if root.pointer == MAXCHILDREN {
+			if root.depth+1 > leftDepth {
+				root.balanced = true
+				return true
+			}
 			rebalance(root)
 		}
 	}
@@ -68,10 +77,11 @@ func recursivelyInsert(node *globalnode, root *globalnode, currDepth int, overal
 }
 
 func rebalance(root *globalnode) {
-	newNode := &globalnode{value: root.value, children: root.children, rebalanced: true}
+	newNode := &globalnode{value: root.value, children: root.children, pointer: MAXCHILDREN, depth: root.children[0].depth + 1, balanced: true}
 	root.children = [MAXCHILDREN]*globalnode{}
 	root.children[0] = newNode
 	root.pointer = 1
+	root.depth++
 }
 
 // CompareGlobalNode compares two globalnode pointers and returns a tools.Comparison value.

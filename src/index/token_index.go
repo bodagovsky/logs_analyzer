@@ -10,10 +10,10 @@ func NewTokenIndex() TokenIndex {
 	}
 }
 
-func (ti *TokenIndex) InsertToken(token string, line int64) {
+func (ti *TokenIndex) InsertToken(token string, offset int64) {
 	if _, ok := ti.tokens[token]; !ok {
-		ti.tokens[token] = []int64{line}
+		ti.tokens[token] = []int64{offset}
 		return
 	}
-	ti.tokens[token] = append(ti.tokens[token], line)
+	ti.tokens[token] = append(ti.tokens[token], offset)
 }

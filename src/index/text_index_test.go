@@ -8,7 +8,7 @@ import (
 
 func TestSearch(t *testing.T) {
 
-	indexer := NewIndexer()
+	indexer := NewTextIndex()
 
 	cases := []struct {
 		title    string

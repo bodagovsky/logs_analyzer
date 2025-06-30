@@ -2,17 +2,17 @@ package index
 
 import "strings"
 
-/* Indexer is responsible for building full-text search index for logs */
+/* TextIndex is responsible for building full-text search index for logs */
 
-type Indexer struct {
+type TextIndex struct {
 	head map[rune]*node
 }
 
-func NewIndexer() *Indexer {
-	return &Indexer{head: make(map[rune]*node)}
+func NewTextIndex() *TextIndex {
+	return &TextIndex{head: make(map[rune]*node)}
 }
 
-func (I *Indexer) Index(message string) {
+func (I *TextIndex) Index(message string) {
 	var word strings.Builder
 
 	for _, char := range message {
@@ -30,11 +30,11 @@ func (I *Indexer) Index(message string) {
 	}
 }
 
-func (I *Indexer) Search(word string) []string {
+func (I *TextIndex) Search(word string) []string {
 	return query(word, I.head)
 }
 
-func (I *Indexer) Reset() {
+func (I *TextIndex) Reset() {
 	I.head = make(map[rune]*node)
 }
 

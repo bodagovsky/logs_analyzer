@@ -10,7 +10,6 @@ import (
 	types "github.com/bodagovsky/logs_out/src/types"
 )
 
-
 func LogsLookup(startOffset, from, to int64, files ...*os.File) ([]types.LogEntry, error) {
 	var logs []types.LogEntry
 	for _, file := range files {
@@ -27,7 +26,7 @@ func LogsLookup(startOffset, from, to int64, files ...*os.File) ([]types.LogEntr
 				unixTs, err := strconv.Atoi(timestamp)
 				if err != nil {
 					return logs, err
-				}				
+				}
 				unix := time.Unix(int64(unixTs), 0).Unix()
 				if unix >= from && unix < to {
 					//TODO: add other field populating as well
@@ -35,7 +34,7 @@ func LogsLookup(startOffset, from, to int64, files ...*os.File) ([]types.LogEntr
 				}
 				if unix >= to {
 					break
-				} 
+				}
 				//TODO: handle error
 				line, _ = reader.ReadString('\n')
 			}
@@ -43,7 +42,7 @@ func LogsLookup(startOffset, from, to int64, files ...*os.File) ([]types.LogEntr
 		} else {
 			break
 		}
-		
+
 	}
 	return logs, nil
 }

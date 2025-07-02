@@ -9,13 +9,13 @@ import (
 )
 
 func TestEmptyStream(t *testing.T) {
-	file, err := os.CreateTemp("data/stream","*.log")
+	file, err := os.CreateTemp("data/stream", "*.log")
 
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer os.Remove(file.Name())
-	logs := []string {
+	logs := []string{
 		"[2025-06-24 12:34:56] [INFO] [client-42] - User 1931 successfully logged in",
 		"[2025-06-24 12:35:10] [ERROR] [client-42] - Failed to connect to database: timeout after 5s",
 		"[2025-06-24 12:35:40] [DEBUG] [client-42] - Received payload: {\"id\":1931,\"status\":\"ok\"}",
@@ -36,11 +36,11 @@ func TestEmptyStream(t *testing.T) {
 	lines := sm.GetLinesByOffsets(offsets[4:])
 
 	assert.ElementsMatch(t, logs[4:], lines)
-	
+
 }
 
 func TestNonEmptyStream(t *testing.T) {
-	file, err := os.CreateTemp("data/stream","*.log")
+	file, err := os.CreateTemp("data/stream", "*.log")
 
 	if err != nil {
 		t.Fatal(err)
@@ -53,7 +53,7 @@ func TestNonEmptyStream(t *testing.T) {
 	file.Write([]byte("[2025-06-24 12:35:10] [ERROR] [client-42] - Failed to connect to database: timeout after 5s"))
 	file.Write([]byte("[2025-06-24 12:35:40] [DEBUG] [client-42] - Received payload: {\"id\":123,\"status\":\"ok\"}))"))
 
-	logs := []string {
+	logs := []string{
 		"[2025-06-24 12:35:44] [INFO] [client-42] - User 1931 successfully logged out",
 		"[2025-06-24 12:36:56] [INFO] [client-42] - User 1932 successfully logged in",
 		"[2025-06-24 12:37:10] [ERROR] [client-42] - Failed to connect to database: timeout after 5s",

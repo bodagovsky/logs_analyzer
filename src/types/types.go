@@ -31,21 +31,20 @@ func (s Severity) String() string {
 
 type Query struct {
 	ClientID string
-	Text string
+	Text     string
 	From, To int64
 }
 
 type LogEntry struct {
-	ClientID string
-	Severity Severity
-	Text string
+	ClientID  string
+	Severity  Severity
+	Text      string
 	Timestamp int64
 }
 
-func (l LogEntry) Format () string {
+func (l LogEntry) Format() string {
 	// TODO: change the way date is formatted
 	// right now it introduces timezone skew
 	t := time.Unix(l.Timestamp, 0)
 	return fmt.Sprintf("[%s] [%s] [%s] - [%s]", t.Format(time.DateTime), l.Severity, l.ClientID, l.Text)
 }
-

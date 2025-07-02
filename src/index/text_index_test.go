@@ -92,6 +92,12 @@ func TestSearch(t *testing.T) {
 			word:     "log",
 			expected: []string{"log-in", "log_out", "login!", "log", "log."},
 		},
+		{
+			title:    "space_separated_messages",
+			words:    []string{"foobar barfoo foolish", "fuzz barz bazzing foo"},
+			word:     "bar",
+			expected: []string{"barfoo", "barz"},
+		},
 	}
 
 	for _, test := range cases {

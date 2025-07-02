@@ -1,5 +1,7 @@
 package index
 
+import "strings"
+
 type TokenIndex struct {
 	tokens map[string][]int64
 }
@@ -10,17 +12,40 @@ func NewTokenIndex() TokenIndex {
 	}
 }
 
-func (ti *TokenIndex) InsertToken(token string, line int64) {
-	if _, ok := ti.tokens[token]; !ok {
-		ti.tokens[token] = []int64{line}
-		return
+func (ti *TokenIndex) Index(message string, offset int64) {
+	var token strings.Builder
+
+	for _, char := range message {
+		if char == ' ' {
+			if token.Len() > 0 {
+				tokenString := token.String()
+				token.Reset()
+				if _, ok := ti.tokens[tokenString]; !ok {
+					ti.tokens[tokenString] = []int64{offset}
+					continue
+				}
+				ti.tokens[tokenString] = append(ti.tokens[tokenString], offset)
+			}
+		}
+		token.WriteRune(char)
 	}
-	ti.tokens[token] = append(ti.tokens[token], line)
+	if token.Len() > 0 {
+		tokenString := token.String()
+		if _, ok := ti.tokens[tokenString]; !ok {
+			ti.tokens[tokenString] = []int64{offset}
+			return
+		}
+		ti.tokens[tokenString] = append(ti.tokens[tokenString], offset)
+	}
 }
 
-func (ti TokenIndex) GetOffsets (token string) []int64 {
+func (ti TokenIndex) GetOffsets(token string) []int64 {
 	if offsets, ok := ti.tokens[token]; ok {
 		return offsets
 	}
 	return []int64{}
+}
+
+func (ti *TokenIndex) Reset() {
+	ti.tokens = make(map[string][]int64)
 }

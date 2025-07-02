@@ -7,7 +7,7 @@ import (
 
 // StreamManager performs operations on writing and retrieveng data from current stream
 type StreamManager struct {
-	// start holds the value of the first timestamp 
+	// start holds the value of the first timestamp
 	// so that StreamManager can decide when to rotate
 	start int64
 
@@ -29,7 +29,7 @@ func New(stream *os.File) *StreamManager {
 }
 
 // AppendLog appends line to current stream and returns offset
-func (sm *StreamManager) AppendLog (logEntry string) int64 {
+func (sm *StreamManager) AppendLog(logEntry string) int64 {
 	//TODO: add rotation logic
 	offset := sm.offset
 	if sm.offset > 0 {
@@ -44,12 +44,12 @@ func (sm *StreamManager) AppendLog (logEntry string) int64 {
 }
 
 // GetLinesByOffsets gets offsets and returns lines of stream by those
-func (sm *StreamManager) GetLinesByOffsets (offsets []int64) []string {
+func (sm *StreamManager) GetLinesByOffsets(offsets []int64) []string {
 	var lines []string
 	var buf = bufio.NewReader(sm.stream)
 	for _, offset := range offsets {
 		sm.stream.Seek(offset, 0)
-		line , _, _:= buf.ReadLine()
+		line, _, _ := buf.ReadLine()
 		lines = append(lines, string(line))
 		buf.Reset(sm.stream)
 	}

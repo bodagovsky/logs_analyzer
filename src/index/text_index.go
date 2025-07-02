@@ -1,5 +1,7 @@
 package index
 
+import "strings"
+
 /* Indexer is responsible for building full-text search index for logs */
 
 type Indexer struct {
@@ -10,8 +12,22 @@ func NewIndexer() *Indexer {
 	return &Indexer{head: make(map[rune]*node)}
 }
 
-func (I *Indexer) Index(word string) {
-	insert(word, I.head)
+func (I *Indexer) Index(message string) {
+	var word strings.Builder
+
+	for _, char := range message {
+		if char == ' ' {
+			if word.Len() > 0 {
+				insert(word.String(), I.head)
+				word.Reset()
+			}
+			continue
+		}
+		word.WriteRune(char)
+	}
+	if word.Len() > 0 {
+		insert(word.String(), I.head)
+	}
 }
 
 func (I *Indexer) Search(word string) []string {

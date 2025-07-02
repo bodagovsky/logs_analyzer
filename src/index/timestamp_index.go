@@ -30,7 +30,7 @@ func (ti *TimestampIndex) InsertLogEntry(ts, offset int64) {
 	}
 }
 
-// LocateLogEntry takes timestamp and returns the offset from which to start reading the log file 
+// LocateLogEntry takes timestamp and returns the offset from which to start reading the log file
 func (ti TimestampIndex) LocateLogEntry(from int64) int64 {
 	i := tools.Binary(ti.keys, from, 0, len(ti.keys), tools.CompareInt64)
 	return ti.mappings[ti.keys[i]]

@@ -17,19 +17,20 @@ func NewTimestampIndex() TimestampIndex {
 	}
 }
 
-func (ti *TimestampIndex) InsertLogEntry(ts, line int64) {
+func (ti *TimestampIndex) InsertLogEntry(ts, offset int64) {
 	if len(ti.keys) == 0 {
 		ti.keys = append(ti.keys, ts)
-		ti.mappings[ts] = line
+		ti.mappings[ts] = offset
 		return
 	}
 	i := len(ti.keys) - 1
 	if ts-ti.keys[i] >= TIMESPAN {
 		ti.keys = append(ti.keys, ts)
-		ti.mappings[ts] = line
+		ti.mappings[ts] = offset
 	}
 }
 
+// LocateLogEntry takes timestamp and returns the offset from which to start reading the log file 
 func (ti TimestampIndex) LocateLogEntry(from int64) int64 {
 	i := tools.Binary(ti.keys, from, 0, len(ti.keys), tools.CompareInt64)
 	return ti.mappings[ti.keys[i]]

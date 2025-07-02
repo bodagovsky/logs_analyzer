@@ -1,0 +1,3 @@
+[1750906938] [INFO] [client-42] - User 12345 successfully logged in
+[1750906939] [ERROR] [client-42] - Failed to connect to database: timeout after 10s
+[1750906940] [DEBUG] [client-42] - Received payload: {"id":12345,"status":"ok"}

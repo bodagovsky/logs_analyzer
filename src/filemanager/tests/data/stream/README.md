@@ -1,0 +1,1 @@
+### This directory contains temporary files used for testing the file manager.

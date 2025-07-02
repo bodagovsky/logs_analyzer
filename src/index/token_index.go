@@ -17,3 +17,10 @@ func (ti *TokenIndex) InsertToken(token string, line int64) {
 	}
 	ti.tokens[token] = append(ti.tokens[token], line)
 }
+
+func (ti TokenIndex) GetOffsets (token string) []int64 {
+	if offsets, ok := ti.tokens[token]; ok {
+		return offsets
+	}
+	return []int64{}
+}

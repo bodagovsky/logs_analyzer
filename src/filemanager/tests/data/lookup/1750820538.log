@@ -1,0 +1,3 @@
+[1750820538] [INFO] [client-42] - User 1234 successfully logged in
+[1750820539] [ERROR] [client-42] - Failed to connect to database: timeout after 5s
+[1750820540] [DEBUG] [client-42] - Received payload: {"id":1234,"status":"ok"}

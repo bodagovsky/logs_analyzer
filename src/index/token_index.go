@@ -26,6 +26,7 @@ func (ti *TokenIndex) Index(message string, offset int64) {
 				}
 				ti.tokens[tokenString] = append(ti.tokens[tokenString], offset)
 			}
+			continue
 		}
 		token.WriteRune(char)
 	}
@@ -39,11 +40,38 @@ func (ti *TokenIndex) Index(message string, offset int64) {
 	}
 }
 
-func (ti TokenIndex) GetOffsets(token string) []int64 {
-	if offsets, ok := ti.tokens[token]; ok {
-		return offsets
+func (ti TokenIndex) GetOffsets(text string) []int64 {
+	var token strings.Builder
+	resultUnique := make(map[int64]struct{})
+
+	for _, char := range text {
+		if char == ' ' {
+			if token.Len() > 0 {
+				if offsets, ok := ti.tokens[token.String()]; ok {
+					for _, offset := range offsets {
+						resultUnique[offset] = struct{}{}
+					}
+				}
+				token.Reset()
+			}
+			continue
+		}
+		token.WriteRune(char)
 	}
-	return []int64{}
+
+	if token.Len() > 0 {
+		if offsets, ok := ti.tokens[token.String()]; ok {
+			for _, offset := range offsets {
+				resultUnique[offset] = struct{}{}
+			}
+		}
+	}
+	result := make([]int64, 0, len(resultUnique))
+
+	for key := range resultUnique {
+		result = append(result, key)
+	}
+	return result
 }
 
 func (ti *TokenIndex) Reset() {

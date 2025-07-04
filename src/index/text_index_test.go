@@ -98,6 +98,18 @@ func TestSearch(t *testing.T) {
 			word:     "bar",
 			expected: []string{"barfoo", "barz"},
 		},
+		{
+			title:    "space_separated_query",
+			words:    []string{"foobar barfoo foolish", "fuzz barz bazzing foo"},
+			word:     "bar foo",
+			expected: []string{"barfoo", "barz", "foobar", "foolish", "foo"},
+		},
+		{
+			title:    "space_separated_query_intersecting_results",
+			words:    []string{"foobar barfoo foolish", "fuzz barz bazzing foo", "found fork", "fone focus"},
+			word:     "fo foo",
+			expected: []string{"foobar", "foolish", "foo", "found", "fork", "fone", "focus"},
+		},
 	}
 
 	for _, test := range cases {

@@ -8,8 +8,8 @@ type Indexer struct {
 	head map[rune]*node
 }
 
-func NewIndexer() *Indexer {
-	return &Indexer{head: make(map[rune]*node)}
+func NewIndexer() Indexer {
+	return Indexer{head: make(map[rune]*node)}
 }
 
 func (I *Indexer) Index(message string) {
@@ -30,8 +30,32 @@ func (I *Indexer) Index(message string) {
 	}
 }
 
-func (I *Indexer) Search(word string) []string {
-	return query(word, I.head)
+func (I *Indexer) Search(text string) []string {
+	var word strings.Builder
+	resultMap := make(map[string]struct{})
+
+	for _, char := range text {
+		if char == ' ' {
+			if word.Len() > 0 {
+				for _, result := range query(word.String(), I.head) {
+					resultMap[result] = struct{}{}
+				}
+				word.Reset()
+			}
+			continue
+		}
+		word.WriteRune(char)
+	}
+	if word.Len() > 0 {
+		for _, result := range query(word.String(), I.head) {
+			resultMap[result] = struct{}{}
+		}
+	}
+	result := make([]string, 0, len(resultMap))
+	for key := range resultMap {
+		result = append(result, key)
+	}
+	return result
 }
 
 func (I *Indexer) Reset() {

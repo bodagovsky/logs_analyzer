@@ -98,6 +98,9 @@ func query(word string, from map[rune]*node) []string {
 
 	var entry bool
 	for _, char := range word {
+		if _, ok := from[char]; !ok {
+			return []string{}
+		}
 		if from[char].children == nil {
 			break
 		}

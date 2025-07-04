@@ -110,6 +110,12 @@ func TestSearch(t *testing.T) {
 			word:     "fo foo",
 			expected: []string{"foobar", "foolish", "foo", "found", "fork", "fone", "focus"},
 		},
+		{
+			title:    "word_partially_present",
+			words:    []string{"cat", "cater", "cattle", "dog", "catalog"},
+			word:     "catering",
+			expected: []string{},
+		},
 	}
 
 	for _, test := range cases {

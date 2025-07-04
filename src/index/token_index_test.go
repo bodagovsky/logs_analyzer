@@ -57,6 +57,20 @@ func TestTokenIndex(t *testing.T) {
 			request:  "database error",
 			expected: []int64{128},
 		},
+		{
+			title:    "no_match",
+			messages: []string{"User successfully logged in", "User successfully logged out", "database connection error"},
+			offsets:  []int64{42, 63, 128},
+			request:  "fantastic sheep",
+			expected: []int64{},
+		},
+		{
+			title:    "empty_query",
+			messages: []string{"User successfully logged in", "User successfully logged out", "database connection error"},
+			offsets:  []int64{42, 63, 128},
+			request:  "",
+			expected: []int64{},
+		},
 	}
 
 	for _, test := range cases {

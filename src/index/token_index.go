@@ -1,6 +1,9 @@
 package index
 
-import "strings"
+import (
+	"slices"
+	"strings"
+)
 
 type TokenIndex struct {
 	tokens map[string][]int64
@@ -42,15 +45,13 @@ func (ti *TokenIndex) Index(message string, offset int64) {
 
 func (ti TokenIndex) GetOffsets(text string) []int64 {
 	var token strings.Builder
-	resultUnique := make(map[int64]struct{})
+	var result []int64
 
 	for _, char := range text {
 		if char == ' ' {
 			if token.Len() > 0 {
 				if offsets, ok := ti.tokens[token.String()]; ok {
-					for _, offset := range offsets {
-						resultUnique[offset] = struct{}{}
-					}
+					result = append(result, offsets...)
 				}
 				token.Reset()
 			}
@@ -61,16 +62,12 @@ func (ti TokenIndex) GetOffsets(text string) []int64 {
 
 	if token.Len() > 0 {
 		if offsets, ok := ti.tokens[token.String()]; ok {
-			for _, offset := range offsets {
-				resultUnique[offset] = struct{}{}
-			}
+			result = append(result, offsets...)
 		}
 	}
-	result := make([]int64, 0, len(resultUnique))
 
-	for key := range resultUnique {
-		result = append(result, key)
-	}
+	// We need sorted results as later binary search is performed
+	slices.Sort(result)
 	return result
 }
 
